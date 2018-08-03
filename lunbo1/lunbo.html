@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>轮播图-天生袁皓天</title>
+	<meta name="KeyWords" content="">
+	<meta name="Description" content="">
+	<meta name="viewport" content="width=device-width,initical-scale=1,user-scalable=no,minimal-ui">
+	<style>
+		body{font:12px "Microsoft YaHei";color:black;}
+		body,dl,dd,p,h1,h2,h3,h4,h5,h6{margin:0;}
+		ol,ul{margin:0;padding:0;list-style:none;}
+		li{list-style:none;}
+		img{border:none;}
+		a{color:#5f615e;text-decoration:none;}
+		/****************************/
+		html{
+			min-width:320px;
+			max-width:540px;
+		}
+		body{
+			width:100%;
+			margin:0 auto;
+			font-size:14px;
+		}
+		#banner{
+			position:relative;
+			width:100%;
+			overflow:hidden;
+		}
+		#banner ul{
+			width:1000%;
+			overflow:hidden;
+			margin-left:-100%;
+		}
+		#banner ul.tran{
+			transition:margin-left 0.3s;
+		}
+		#banner ul li{
+			float:left;
+			width:10%;
+		}
+		#banner ul li img{
+			display:block;
+		}
+		#banner .tab{
+			position:absolute;
+			bottom:5px;
+			left:50%;
+			width:160px;
+			height:4px;
+			margin-left:-80px;
+		}
+		#banner .tab li{
+			float:left;
+			width:20px;
+			height:4px;
+			border-radius:3px;
+			margin:0 3px;
+			background:rgba(225,225,225,.5);
+		}
+		#banner .tab li.on{
+			background:#fff;
+		}
+	</style>
+</head>
+<body>
+	<div id="banner">
+		<ul class="ul">
+			<li>
+				<a href="">
+					<img src="images/6.jpg" alt="" width="100%">
+				</a>
+			</li>
+			<li>
+				<a href="">
+					<img src="images/1.jpg" alt="" width="100%">
+				</a>
+			</li>
+			<li>
+				<a href="">
+					<img src="images/2.jpg" alt="" width="100%">
+				</a>
+			</li>
+			<li>
+				<a href="">
+					<img src="images/3.jpg" alt="" width="100%">
+				</a>
+			</li>
+			<li>
+				<a href="">
+					<img src="images/4.jpg" alt="" width="100%">
+				</a>
+			</li>
+			<li>
+				<a href="">
+					<img src="images/5.jpg" alt="" width="100%">
+				</a>
+			</li>
+			<li>
+				<a href="">
+					<img src="images/6.jpg" alt="" width="100%">
+				</a>
+			</li>
+			<li>
+				<a href="">
+					<img src="images/1.jpg" alt="" width="100%">
+				</a>
+			</li>
+		</ul>
+		<div class="tab">
+			<li class="on"></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+		</div>
+	</div>
+
+<script>
+(function(){
+	var obanner = document.querySelector("#banner");
+	var oul = obanner.querySelector(".ul");
+	var olis = oul.querySelectorAll("li");
+	var otabs =  obanner.querySelectorAll(".tab li");
+	var index = 0;//当前第[1]张
+	var length = olis.length; 
+	var time = null;
+
+	obanner.ontouchstart = function(e){
+		var aL = e.changedTouches[0].pageX;
+		var sL = parseInt(getComputedStyle(oul).marginLeft);
+		clearInterval(time);
+
+		document.ontouchmove = function(e){
+			var bL = e.changedTouches[0].pageX-aL;
+			oul.style.marginLeft = bL+sL+"px";
+		}
+		document.ontouchend = function(e){
+			document.ontouchmove = null;
+			document.ontouchend = null;
+			var eL = e.changedTouches[0].pageX-aL;
+
+			if(eL<-30 && index!=-1 && index!=length-2){
+				index++;
+			}else if(eL>30 && index!=-1 && index!=length-2){
+				index--;
+			}
+			oul.classList.add('tran');
+			oul.style.marginLeft = -(index+1)*100+'%';
+		}
+	}
+	oul.addEventListener("transitionend",function(){
+		this.classList.remove('tran');
+		if(index===-1){
+			index = length-2;
+		}else if(index===length-2){
+			index=0;
+		}
+		this.style.marginLeft = -(index+1)*100+'%';
+		for(var i=0;i<otabs.length;i++){
+			otabs[i].classList.remove('on');
+		}
+		otabs[index].classList.add('on');
+		auto();
+	});
+
+	function auto(){
+		clearInterval(time);
+		time = setInterval(function(){
+			index++;
+			oul.classList.add('tran');
+			oul.style.marginLeft = -(index+1)*100+'%';
+		},3000);
+	}
+	auto();
+})();
+</script>	
+</body>
+</html>
